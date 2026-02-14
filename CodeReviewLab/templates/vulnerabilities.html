@@ -1,0 +1,130 @@
+{% extends "base.html" %}
+
+{% block title %}Vulnerability Guide{% endblock %}
+
+{% block content %}
+<h2>📚 Security Vulnerabilities Guide</h2>
+
+<p style="color: var(--text-secondary); margin: 1rem 0 2rem 0;">
+    This application contains <strong>7 intentional security vulnerabilities</strong> for educational purposes. 
+    Below is a comprehensive guide to each vulnerability.
+</p>
+
+<ul class="vuln-list">
+    <li class="vuln-item">
+        <h3>VULN #1: Hardcoded Secret Key</h3>
+        <p><strong>Location:</strong> <code>app.py</code> - Flask application configuration</p>
+        <p><strong>Description:</strong> The application uses a hardcoded secret key (<code>'dev_secret_123'</code>) 
+        in the source code. Secret keys should never be committed to version control.</p>
+        <p><strong>Risk:</strong> If an attacker obtains the secret key, they can forge session cookies, 
+        potentially gaining unauthorized access to user accounts or administrative functions.</p>
+        <span class="risk">HIGH SEVERITY</span>
+        <div class="code-block" style="margin-top: 1rem;">
+app.config['SECRET_KEY'] = 'dev_secret_123'  # VULN #1
+        </div>
+    </li>
+
+    <li class="vuln-item">
+        <h3>VULN #2: Server-Side Template Injection (SSTI)</h3>
+        <p><strong>Location:</strong> <code>/greet</code> endpoint</p>
+        <p><strong>Description:</strong> User input is directly embedded into a template using f-strings 
+        and <code>render_template_string()</code> without sanitization.</p>
+        <p><strong>Risk:</strong> Attackers can execute arbitrary Python code on the server by injecting 
+        template expressions like <code>{{7*7}}</code> or <code>{{config.__class__.__init__.__globals__}}</code>.</p>
+        <span class="risk">CRITICAL SEVERITY</span>
+        <div class="code-block" style="margin-top: 1rem;">
+# Try: /greet?name={{7*7}}
+# Try: /greet?name={{config.items()}}
+return render_template_string(f'&lt;h1&gt;Hello {name}!&lt;/h1&gt;')
+        </div>
+    </li>
+
+    <li class="vuln-item">
+        <h3>VULN #3: SQL Injection</h3>
+        <p><strong>Location:</strong> <code>/user/&lt;user_id&gt;</code> endpoint</p>
+        <p><strong>Description:</strong> User input is directly concatenated into SQL queries using f-strings 
+        without parameterization or validation.</p>
+        <p><strong>Risk:</strong> Attackers can manipulate SQL queries to access, modify, or delete unauthorized 
+        data, bypass authentication, or execute administrative operations.</p>
+        <span class="risk">CRITICAL SEVERITY</span>
+        <div class="code-block" style="margin-top: 1rem;">
+# Try: /user/1 OR 1=1
+# Try: /user/1 UNION SELECT 1,2,3,4,5,6
+query = f"SELECT * FROM users WHERE id = {user_id}"
+        </div>
+    </li>
+
+    <li class="vuln-item">
+        <h3>VULN #4: Path Traversal / Unrestricted File Upload</h3>
+        <p><strong>Location:</strong> <code>/upload</code> endpoint</p>
+        <p><strong>Description:</strong> The application accepts file uploads without validating the filename, 
+        file type, or destination path.</p>
+        <p><strong>Risk:</strong> Attackers can upload malicious files (PHP shells, executables), overwrite 
+        system files using path traversal (<code>../../../etc/passwd</code>), or cause denial of service.</p>
+        <span class="risk">HIGH SEVERITY</span>
+        <div class="code-block" style="margin-top: 1rem;">
+# Try uploading with filename: ../../../test.txt
+# Try uploading: shell.php or malware.exe
+file.save(f'uploads/{file.filename}')
+        </div>
+    </li>
+
+    <li class="vuln-item">
+        <h3>VULN #5: Insecure Deserialization</h3>
+        <p><strong>Location:</strong> <code>/session/load</code> endpoint</p>
+        <p><strong>Description:</strong> The application deserializes user-controlled data using Python's 
+        <code>pickle</code> module, which can execute arbitrary code during deserialization.</p>
+        <p><strong>Risk:</strong> Attackers can craft malicious pickle payloads that execute arbitrary Python 
+        code when deserialized, leading to complete system compromise.</p>
+        <span class="risk">CRITICAL SEVERITY</span>
+        <div class="code-block" style="margin-top: 1rem;">
+# Pickle can execute __reduce__ methods during deserialization
+data = pickle.loads(base64.b64decode(data_cookie))
+        </div>
+    </li>
+
+    <li class="vuln-item">
+        <h3>VULN #6: Command Injection</h3>
+        <p><strong>Location:</strong> <code>/command</code> endpoint</p>
+        <p><strong>Description:</strong> The application executes user-provided input as system commands 
+        without validation or sanitization.</p>
+        <p><strong>Risk:</strong> Attackers can execute arbitrary system commands, access sensitive files, 
+        install backdoors, or compromise the entire server.</p>
+        <span class="risk">CRITICAL SEVERITY</span>
+        <div class="code-block" style="margin-top: 1rem;">
+# Try: dir & whoami
+# Try: dir | findstr .txt
+output = os.popen(cmd).read()
+        </div>
+    </li>
+
+    <li class="vuln-item">
+        <h3>VULN #7: Debug Mode in Production</h3>
+        <p><strong>Location:</strong> Application startup configuration</p>
+        <p><strong>Description:</strong> The Flask application runs with <code>debug=True</code>, enabling 
+        the interactive debugger and verbose error messages.</p>
+        <p><strong>Risk:</strong> Exposes sensitive information including source code, environment variables, 
+        and provides an interactive Python console accessible via browser when errors occur.</p>
+        <span class="risk">HIGH SEVERITY</span>
+        <div class="code-block" style="margin-top: 1rem;">
+# Never use debug=True in production!
+app.run(debug=True, host='127.0.0.1', port=5000)
+        </div>
+    </li>
+</ul>
+
+<div class="alert alert-warning" style="margin-top: 3rem;">
+    <h3 style="margin-bottom: 1rem;">🛡️ Remediation Recommendations:</h3>
+    <ul style="margin-left: 1.5rem; line-height: 1.8;">
+        <li><strong>#1:</strong> Use environment variables for secrets, never hardcode them</li>
+        <li><strong>#2:</strong> Use <code>render_template()</code> with proper escaping, never <code>render_template_string()</code> with user input</li>
+        <li><strong>#3:</strong> Always use parameterized queries or ORM methods</li>
+        <li><strong>#4:</strong> Validate file types, sanitize filenames, use secure upload paths</li>
+        <li><strong>#5:</strong> Use JSON or secure serialization formats, never pickle with untrusted data</li>
+        <li><strong>#6:</strong> Never execute user input as system commands, use safer alternatives</li>
+        <li><strong>#7:</strong> Always disable debug mode in production environments</li>
+    </ul>
+</div>
+
+<a href="/" class="back-link">← Back to Home</a>
+{% endblock %}

@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+
+{% block title %}File Upload{% endblock %}
+
+{% block content %}
+<h2>📁 File Upload Service</h2>
+
+<p style="color: var(--text-secondary); margin: 1rem 0 2rem 0;">
+    Upload files to the server for storage and sharing.
+</p>
+
+{% if success %}
+<div class="alert alert-success">
+    <strong>✅ Success:</strong> {{ success }}
+</div>
+{% endif %}
+
+{% if error %}
+<div class="alert alert-error">
+    <strong>❌ Error:</strong> {{ error }}
+</div>
+{% endif %}
+
+<form method="POST" enctype="multipart/form-data" action="/upload">
+    <div class="file-upload-area">
+        <h3>📎 Select a file to upload</h3>
+        <p style="color: var(--text-secondary); margin: 1rem 0;">
+            Choose any file from your computer
+        </p>
+        <input type="file" name="file" class="form-control" style="margin-top: 1rem;">
+    </div>
+    
+    <button type="submit" class="btn btn-primary" style="margin-top: 1.5rem;">Upload File</button>
+    <a href="/" class="btn btn-secondary" style="margin-left: 1rem;">Back to Home</a>
+</form>
+{% endblock %}

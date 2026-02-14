@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+
+{% block title %}Home{% endblock %}
+
+{% block content %}
+<h2 style="text-align: center; margin-bottom: 2rem;">Welcome to the Vulnerable Application Lab</h2>
+
+<p style="text-align: center; color: var(--text-secondary); font-size: 1.1rem; margin-bottom: 3rem;">
+    This application demonstrates common web security vulnerabilities. Explore each feature to discover the security flaws.
+</p>
+
+<div class="nav-grid">
+    <a href="/greet" class="nav-card">
+        <h3>💬 Greeting Service</h3>
+        <p>Personalized greetings for users. Try entering your name and see what happens.</p>
+        <span class="vuln-badge">VULN #2: SSTI</span>
+    </a>
+    
+    <a href="/users" class="nav-card">
+        <h3>👥 User Directory</h3>
+        <p>Browse and search through the user database. View detailed user profiles.</p>
+        <span class="vuln-badge">VULN #3: SQL Injection</span>
+    </a>
+    
+    <a href="/upload" class="nav-card">
+        <h3>📁 File Upload</h3>
+        <p>Upload files to the server. Share documents and resources with others.</p>
+        <span class="vuln-badge">VULN #4: Path Traversal</span>
+    </a>
+    
+    <a href="/session/save" class="nav-card">
+        <h3>🔐 Session Manager</h3>
+        <p>Manage your session data. Save and load session information securely.</p>
+        <span class="vuln-badge">VULN #5: Unsafe Deserialization</span>
+    </a>
+    
+    <a href="/command" class="nav-card">
+        <h3>⚙️ System Tools</h3>
+        <p>Execute system commands for diagnostics and administration.</p>
+        <span class="vuln-badge">VULN #6: Command Injection</span>
+    </a>
+    
+    <a href="/vulnerabilities" class="nav-card">
+        <h3>📚 Vulnerability Guide</h3>
+        <p>Learn about all the security vulnerabilities present in this application.</p>
+        <span class="vuln-badge" style="background: var(--primary-color);">Documentation</span>
+    </a>
+</div>
+
+<div class="alert alert-warning" style="margin-top: 3rem;">
+    <strong>🎓 Learning Objectives:</strong><br>
+    This lab contains <strong>7 critical vulnerabilities</strong> including hardcoded secrets, template injection, SQL injection, 
+    insecure file uploads, unsafe deserialization, command injection, and debug mode exposure.
+</div>
+{% endblock %}

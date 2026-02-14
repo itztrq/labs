@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+
+{% block title %}Greeting Service{% endblock %}
+
+{% block content %}
+<h2>💬 Personalized Greeting Service</h2>
+
+<p style="color: var(--text-secondary); margin: 1rem 0 2rem 0;">
+    Enter your name below to receive a personalized greeting message!
+</p>
+
+<form method="GET" action="/greet">
+    <div class="form-group">
+        <label for="name">Your Name:</label>
+        <input type="text" id="name" name="name" class="form-control" placeholder="Enter your name...">
+    </div>
+    
+    <button type="submit" class="btn btn-primary">Submit</button>
+    <a href="/" class="btn btn-secondary" style="margin-left: 1rem;">Back to Home</a>
+</form>
+{% endblock %}

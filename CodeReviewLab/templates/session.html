@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+
+{% block title %}Session Manager{% endblock %}
+
+{% block content %}
+<h2>🔐 Session Manager</h2>
+
+<p style="color: var(--text-secondary); margin: 1rem 0 2rem 0;">
+    Manage your session data using our secure serialization system.
+</p>
+
+{% if action == 'saved' %}
+<div class="alert alert-success">
+    <strong>✅ Session Saved:</strong> Your session data has been serialized and stored in a cookie.
+</div>
+<div class="code-block">
+Session Data: {{ data }}
+</div>
+<a href="/session/load" class="btn btn-primary" style="margin-top: 1rem;">Load Session Data</a>
+{% endif %}
+
+{% if action == 'loaded' %}
+<div class="alert alert-success">
+    <strong>✅ Session Loaded:</strong> Your session data has been deserialized successfully.
+</div>
+<div class="code-block">
+Loaded Data: {{ data }}
+</div>
+{% endif %}
+
+{% if action == 'load_failed' %}
+<div class="alert alert-error">
+    <strong>❌ Load Failed:</strong> {{ error }}
+</div>
+{% endif %}
+
+{% if not action or action == 'load_failed' %}
+<div style="margin-top: 2rem;">
+    <a href="/session/save" class="btn btn-primary">Save New Session</a>
+    <a href="/session/load" class="btn btn-secondary" style="margin-left: 1rem;">Load Existing Session</a>
+</div>
+{% endif %}
+
+<a href="/" class="back-link">← Back to Home</a>
+{% endblock %}

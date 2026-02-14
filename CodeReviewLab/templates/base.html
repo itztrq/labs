@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Vulnerable Web App{% endblock %} - Code Review Lab</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    {% block body %}
+    <div class="container">
+        <header>
+            <h1>🔓 Vulnerable Web Application</h1>
+            <p class="subtitle">Code Review Laboratory - Educational Purposes Only</p>
+        </header>
+        
+        <div class="warning-banner">
+            ⚠️ WARNING: This application contains intentional security vulnerabilities. Do NOT deploy to production!
+        </div>
+        
+        <div class="content">
+            {% block content %}{% endblock %}
+        </div>
+        
+        <footer>
+            <p>&copy; 2026 Code Review Lab | For Educational and Training Purposes Only</p>
+        </footer>
+    </div>
+    {% endblock %}
+</body>
+</html>

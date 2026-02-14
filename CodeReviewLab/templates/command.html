@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+
+{% block title %}System Tools{% endblock %}
+
+{% block content %}
+<h2>⚙️ System Diagnostic Tools</h2>
+
+<p style="color: var(--text-secondary); margin: 1rem 0 2rem 0;">
+    Execute system commands for diagnostics, maintenance, and administration.
+</p>
+
+<form method="POST" action="/command">
+    <div class="form-group">
+        <label for="cmd">Command:</label>
+        <input type="text" id="cmd" name="cmd" class="form-control" placeholder="Enter system command..." value="{{ request.form.get('cmd', '') }}">
+    </div>
+    
+    <button type="submit" class="btn btn-danger">Execute Command</button>
+    <a href="/" class="btn btn-secondary" style="margin-left: 1rem;">Back to Home</a>
+</form>
+
+{% if output %}
+<div class="alert alert-success" style="margin-top: 2rem;">
+    <strong>✅ Command Executed Successfully</strong>
+</div>
+<div class="code-block">
+<strong>Output:</strong>
+<pre>{{ output }}</pre>
+</div>
+{% endif %}
+
+{% if error %}
+<div class="alert alert-error" style="margin-top: 2rem;">
+    <strong>❌ Error:</strong> {{ error }}
+</div>
+{% endif %}
+{% endblock %}

@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+
+{% block title %}User Directory{% endblock %}
+
+{% block content %}
+<h2>👥 User Directory</h2>
+
+<p style="color: var(--text-secondary); margin: 1rem 0 2rem 0;">
+    Browse all registered users in the system. Click on a user ID to view detailed information.
+</p>
+
+<div class="table-container">
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Username</th>
+                <th>Email</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for user in users %}
+            <tr>
+                <td>{{ user.id }}</td>
+                <td>{{ user.username }}</td>
+                <td>{{ user.email }}</td>
+                <td>
+                    <a href="/user/{{ user.id }}">View Details →</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+<a href="/" class="back-link">← Back to Home</a>
+{% endblock %}
